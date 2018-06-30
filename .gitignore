@@ -1,0 +1,5 @@
+target
+.idea/
+logs
+data/hn_logs.tsv
+data/log_parts

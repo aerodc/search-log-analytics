@@ -1,4 +1,6 @@
 
+GET /ping                               controllers.Ping.ping()
+
 GET /1/queries/count/:date              controllers.Queries.count(date: String)
 
 GET /1/queries/popular/:date            controllers.Queries.popular(date: String, size: Int)
