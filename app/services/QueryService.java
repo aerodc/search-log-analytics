@@ -29,21 +29,23 @@ public class QueryService {
     }
 
     public long getCount(String dateQuery) throws IOException {
-        List<LogFileSearchCriteria> logFileSearchCriteriaList = dateQueryParamToFileNames.apply(dateQuery);
-        long result = 0;
-        for (LogFileSearchCriteria logFileSearchCriteria : logFileSearchCriteriaList) {
-            if (logFileSearchCriteria.isPartial()) {
-                result = result + fileUtils.countLinesBeginWith(logFileSearchCriteria.getLogFilePathName(), logFileSearchCriteria.getDateQuery());
-            } else {
-                result = result + fileUtils.countLines(logFileSearchCriteria.getLogFilePathName());
-            }
-        }
-        return result;
-    }
-    public List<QueryCountJson> getQueries(String dateQuery, int size) throws IOException {
-        List<String> queries = new ArrayList<>();
-        List<LogFileSearchCriteria> logFileSearchCriteriaList = dateQueryParamToFileNames.apply(dateQuery);
 
+        List<String> queries = getQueryLines(dateQuery);
+        return queries.stream().distinct().count();
+    }
+
+    public List<QueryCountJson> getQueries(String dateQuery, int size) throws IOException {
+
+        List<String> queries = getQueryLines(dateQuery);
+
+        QueryCount queryCount = new QueryCount(queries);
+
+        return queryCount.getTopQueryCounts(size);
+    }
+
+    private List<String> getQueryLines(String dateQuery) throws IOException {
+        List<LogFileSearchCriteria> logFileSearchCriteriaList = dateQueryParamToFileNames.apply(dateQuery);
+        List<String> queries = new ArrayList<>();
         for (LogFileSearchCriteria logFileSearchCriteria : logFileSearchCriteriaList) {
             if (logFileSearchCriteria.isPartial()) {
                 queries.addAll(this.fileUtils.getLinesBeginWith(logFileSearchCriteria.getLogFilePathName(), logFileSearchCriteria.getDateQuery()));
@@ -51,9 +53,6 @@ public class QueryService {
                 queries.addAll(this.fileUtils.getLines(logFileSearchCriteria.getLogFilePathName()));
             }
         }
-
-        QueryCount queryCount = new QueryCount(queries);
-
-        return queryCount.getTopQueryCounts(size);
+        return queries;
     }
 }

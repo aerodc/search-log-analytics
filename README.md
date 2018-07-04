@@ -8,6 +8,7 @@
 
 
 #### Searching:
+- Using Java 8 Stream to handle data
 - Using Hashmap with query as key, count as value.
 - Using Heap (PriorityQueue in Java) to get the top N queries.
 

@@ -91,21 +91,6 @@ public class FileUtils {
                 .collect(Collectors.toList());
     }
 
-    public long countLines(String file) throws IOException {
-        Path path = environment.getFile(file).toPath();
-        try (Stream<String> stringStream = Files.lines(path)) {
-            return stringStream.count();
-        }
-    }
-
-    public long countLinesBeginWith(String file, String beginWith) throws IOException {
-        Path path = environment.getFile(file).toPath();
-        try (Stream<String> stringStream = Files.lines(path)) {
-            return stringStream.filter(line -> line.startsWith(beginWith))
-                    .count();
-        }
-    }
-
     public List<String> getLines(String file) throws IOException {
         Path path = environment.getFile(file).toPath();
         try (Stream<String> stringStream = Files.lines(path)) {
